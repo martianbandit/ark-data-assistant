@@ -8,7 +8,7 @@ import random
 import utils
 
 # App title
-st.set_page_config(page_title="Ask ADA", page_icon=":llama:",layout="centered")
+st.set_page_config(page_title="Ask ADA", page_icon=":wrench:",layout="centered")
 
 user = st.secrets['DB_USER']
 password = st.secrets['DB_PASS']
@@ -78,18 +78,18 @@ for message in st.session_state.messages:
         st.write(message["content"])
 
 # Function for generating LLaMA2 response
-def generate_llama2_response(prompt_input):
+def generate_llama3_response(prompt_input):
     string_dialogue = context_prompt
     for dict_message in st.session_state.messages:
         if dict_message["role"] == "user":
             string_dialogue += "User: " + dict_message["content"] + "\n\n"
         else:
             string_dialogue += "Assistant: " + dict_message["content"] + "\n\n"
-    output = replicate.run('a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5', 
+    output = replicate.run('meta/meta-llama-3-8b-instruct', 
                            input={"prompt": f"{string_dialogue} {prompt_input} Assistant: ",
-                                  "temperature": 0.5, 
+                                  "temperature": 0.3, 
                                   "top_p": 1, 
-                                  "max_length": 1000, 
+                                  "max_length": 4000, 
                                   "repetition_penalty":1})
     return output
 
